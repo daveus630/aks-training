@@ -53,4 +53,27 @@ module "sql-database" {
   vnet_subnet_id      = data.azurerm_subnet.subnet.id
   tags                = local.tags
 }
+module "aks" {
+  source              = "./modules/aks"
+  resource_group_name = azurerm_resource_group.rg.name
+  resource_group_id   = azurerm_resource_group.rg.id
+  location            = "canadacentral"
+  acr_name            = "acrmuakssunicdadev"
+  aks_name            = "aks-muaks-sunicda-dev"
+  vnet_subnet_id      = data.azurerm_subnet.subnet.id
+  node_count          = 2
+  max_pods_per_node   = 110
+  node_vm_size        = "Standard_D2_v2"
+
+  service_principal_client_id     = "e53b4a8b-0eec-441b-aacb-936ff93f4093"
+  service_principal_client_secret = "-xO7Q~jSVG_1SeWsT.tr088RddZkQGJEVV14f"
+
+  network_plugin     = "kubenet"
+  service_cidr       = "172.29.13.0/24"
+  dns_service_ip     = "172.29.13.10"
+  pod_cidr           = "172.29.128.0/21"
+  docker_bridge_cidr = "172.17.0.1/16"
+
+  tags = local.tags
+}
 
